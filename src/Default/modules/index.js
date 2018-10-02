@@ -6,7 +6,7 @@
 import { combineReducers } from 'redux';
 
 import config from './config';
-import DefaultModule from './DefaultModule';
+import DefaultModule from './ComponentModule';
 
 export default combineReducers({
 	config,
