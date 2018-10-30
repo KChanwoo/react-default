@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import '../component/Maker.css';
+import '../component/default.css';
 import {bindActionCreators} from 'redux';
 
 import {connect} from 'react-redux';
@@ -36,7 +36,7 @@ class DefaultContainer extends Component {
 export default connect(
 	(state) => ({
 		defaultSetting: state.config.get("defaultSetting"),
-		componentSetting:      state.search.get("componentSetting")
+		componentSetting:      state.DefaultModule.get("componentSetting")
 	}),
 	(dispatch) => ({
 		DefaultActions: bindActionCreators(ComponentActions, dispatch)

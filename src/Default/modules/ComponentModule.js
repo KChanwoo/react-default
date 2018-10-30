@@ -9,9 +9,9 @@ import $ from "jquery";
 
 const SET_INFO = 'template/SET_INFO';
 
-const ANALYZE_PENDING = 'template/ANALYZE_PENDING';
-const ANALYZE_FAILURE = 'template/ANALYZE_FAILURE';
-const ANALYZE_SUCCESS = 'template/ANALYZE_SUCCESS';
+const SERVE_PENDING = 'template/SERVE_PENDING';
+const SERVE_FAILURE = 'template/SERVE_FAILURE';
+const SERVE_SUCCESS = 'template/SERVE_SUCCESS';
 
 export const setInfo = createAction(SET_INFO);
 
@@ -19,9 +19,9 @@ const initialState = Map({
 	componentSetting:  null
 });
 
-export function analyze(server, params) {
+function serve(server, params) {
 	return (dispatch) => {
-		dispatch({type: ANALYZE_PENDING});
+		dispatch({type: SERVE_PENDING});
 		
 		return $.when($.ajax({
 			url:         server,
@@ -32,13 +32,13 @@ export function analyze(server, params) {
 			dataType:    'json',
 			success:     function (data) {
 				dispatch({
-					type:    ANALYZE_SUCCESS,
+					type:    SERVE_SUCCESS,
 					payload: {error: false}
 				});
 			},
 			error:       function (jqXHR, textStatus, errorThrown) {
 				dispatch({
-					type:    ANALYZE_FAILURE,
+					type:    SERVE_FAILURE,
 					payload: {error: true, message: textStatus}
 				});
 			}
@@ -46,22 +46,26 @@ export function analyze(server, params) {
 	};
 }
 
+export function defaultServe(url, params) {
+	return serve(url, params);
+}
+
 export default handleActions({
 	[SET_INFO]:        (state, action) => {
 		return state.set('componentSetting', action.payload.componentSetting);
 	//	.set('afterSave', action.payload.afterSave); // after setting
 	},
-	[ANALYZE_PENDING]: (state, action) => {
+	[SERVE_PENDING]: (state, action) => {
 		return state.set('pending', true)
 		.set('error', false)
 		.set('message', '');
 	},
-	[ANALYZE_SUCCESS]: (state, action) => {
+	[SERVE_SUCCESS]: (state, action) => {
 		return state.set('pending', false)
 		.set('error', false)
 		.set('message', '');
 	},
-	[ANALYZE_FAILURE]: (state, action) => {
+	[SERVE_FAILURE]: (state, action) => {
 		return state.set('pending', false)
 		.set('error', true)
 		.set('message', action.payload.message);
